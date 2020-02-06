@@ -1,0 +1,5 @@
+---
+
+users:
+  - username: "service_user"
+    group: "service_user"

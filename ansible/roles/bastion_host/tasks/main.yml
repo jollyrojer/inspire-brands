@@ -1,0 +1,20 @@
+---
+
+- name: Create deployment user group
+  group:
+    name: "{{  item.group }}"
+  with_items: "{{ users }}"
+    
+- name: "Create deployment service account"
+  user:
+    name: "{{ item.username }}"
+    group: "{{ item.group }}"
+    state: "present"
+  with_items: "{{ users }}"
+
+- name: "Add authorized keys"
+  authorized_key:
+    user: "{{ item.username }}"
+    key: "{{ lookup('file', 'files/'+ item.username + '.key.pub') }}"
+  with_items: "{{ users }}"
+

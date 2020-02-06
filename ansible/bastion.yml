@@ -1,0 +1,13 @@
+---
+
+- name: "Configure bastion host"
+  hosts: bastion
+  remote_user: vagrant
+  become: yes
+  become_user: root
+  become_method: sudo
+
+  roles:
+    - { role: common, tags: ["bootsprap"] }
+    - { role: bastion_host, tags: ["setup_bastion_host"] }
+

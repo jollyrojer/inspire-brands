@@ -1,0 +1,16 @@
+---
+
+- name: "Update packages"
+  yum:
+    name: '*'
+    state: "latest"
+
+- name: "Stop and disable firewalld"
+  service:
+    name: "firewalld"
+    state: "stopped"
+    enabled: False
+
+- name: "Disable SElinux"
+  selinux:
+    state: "disabled"

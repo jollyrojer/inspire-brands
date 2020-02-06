@@ -1,0 +1,5 @@
+---
+
+- name: Include RHEL specific tasks
+  import_tasks: rhel_bootstrap.yml
+  when: ansible_os_family == "RedHat"  

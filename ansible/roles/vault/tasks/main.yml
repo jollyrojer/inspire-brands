@@ -1,0 +1,59 @@
+- name: Create vault user group
+  group: 
+    name: "{{ vault_group }}"
+
+- name: Create vault user
+  user:
+    name: "{{ vault_user }}"
+    group: "{{ vault_group }}"
+    system: yes
+    shell: "/sbin/nologin"
+    comment: "vault nologin User"
+    createhome: "no"
+    state: present
+
+- name: Install packages
+  package:
+    name: "unzip"
+    update_cache: yes
+
+- name: Download vault binary
+  get_url:
+    url: https://releases.hashicorp.com/vault/{{vault_version}}/vault_{{vault_version}}_linux_amd64.zip
+    dest: /tmp/vault_{{vault_version}}_linux_amd64.zip
+    owner: "{{ vault_user }}"
+    group: "{{ vault_group }}"
+    mode: 0755
+  register: vault_download
+
+- name: Unzip vault archive
+  unarchive:
+    src: "{{ vault_download.dest }}"
+    dest: "{{ vault_bin_path }}"
+    copy: no
+    owner: "{{ vault_user }}"
+    group: "{{ vault_group }}"
+    mode: 0755
+
+- name: Set vault binary capabilities
+  capabilities:
+    path: "{{ vault_bin_path }}/vault"
+    capability: cap_ipc_lock+ep
+    state: present
+
+- name: Create vault systemd unit
+  template:
+    src: init.service.j2
+    dest: /etc/systemd/system/vault.service
+    owner: root
+    group: root
+  notify:
+    - reload systemctl
+
+- name: Create vault config file
+  template:
+    src: vault.hcl.j2
+    dest: "{{ vault_config_path }}"
+    owner: "{{ vault_user }}"
+    group: "{{ vault_group }}"
+

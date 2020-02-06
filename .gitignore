@@ -1,0 +1,4 @@
+*.swp
+venv/
+ansible/.vagrant/
+.ssh-keys/
