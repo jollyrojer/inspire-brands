@@ -1,11 +1,7 @@
 ---
 
 - name: Install Hashicorp vault
-  hosts: vault
-  remote_user: packer_service_user
-  become: yes
-  become_user: root
-  become_method: sudo
+  hosts: all
   roles:
     - { role: common, tags: ["bootstrap"] }
     - { role: vault, tags: ["vault_install"] }
