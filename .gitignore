@@ -3,3 +3,4 @@
 ansible/.vagrant/
 .ssh-keys/
 *.icloud
+.terraform/
